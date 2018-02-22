@@ -42,6 +42,11 @@ class GF:
                 self.poly.append((int(i),1))
         if p == 2:
             self.poly.append((0,1))
+    
+    #performs a modulus operation using self.poly
+    def mod(self, other):
+        #copy the provided list
+        other = list(other)
         
     
     #creates a new element with the given value
@@ -54,11 +59,18 @@ class GF:
         if isisntance(val, int):
             if self.characteristic != 2:
                 raise TypeError('integer definition of field elements is only allowed in fields of characteristic 2')
+            #TODO cover binary conversion
         #covers the case that the value is an iterable of individual terms
         #first term is for exponent zero, etc.
         #accepts integers or strings
         else:
-            pol = [0] * self.degree
+            #makes val into a list in order to check the number of terms
+            if isinstance(val, str):
+                #strings are interpreted as the first character being most significant
+                val = [i for i in val[::-1]]
+            else:
+                val = list(val)
+            pol = [0] * len(val)
             for i in range(len(val)):
                 if isinstance(val[i], int):
                     pol[i] = val[i]
@@ -75,6 +87,7 @@ class GF:
                                 pol[i] = a - 87
                             else:
                                 raise ValueError('polynomial coefficient is uninterprettable')
+            pol = self.mod(pol)
             
                     
             
